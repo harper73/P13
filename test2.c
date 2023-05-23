@@ -14,7 +14,7 @@ struct dirent *search_directory(DIR *src_dir, char *filter,
     size_t files_max = 10;
     size_t files_size = 0;
     struct dirent *files = (struct dirent*)malloc(sizeof(struct dirent) * files_max);
-    *delete_choices = (char*)malloc(files_max);
+    *delete_choices = (char*)malloc(sizeof(char) * files_max);
     *created = 0;
     *to_delete = 0;
 
@@ -51,19 +51,19 @@ struct dirent *search_directory(DIR *src_dir, char *filter,
         {
             // ask for delete or not
             printf("Delete %s (y/n)", current_filename);
-            char delete_conf[1];
-            fgets(delete_conf, 1, stdin);
+            char delete_conf[2];
+            fgets(delete_conf, sizeof(delete_conf), stdin);
 
             if (toupper(delete_conf[0]) == 'Y')
             {
                 *to_delete = *to_delete + 1;
-                *delete_choices[ *to_delete ] = 1;
+                (*delete_choices)[ *to_delete ] = 1;
             }
 
             printf("\n");
 
         }
-
+        files_size++;
     }
 
     *created = files_size;
@@ -127,7 +127,7 @@ int main (int argc, char **argv)
 
     printf("Enter filter: ");
     char filter[32];
-    fgets(filter, 32, stdin);
+    fgets(filter, sizeof(filter), stdin);
 
     // Ensure we can open directory
     src_dir = opendir (argv[1]);
@@ -148,8 +148,8 @@ int main (int argc, char **argv)
 
     printf("You are going to delete the following: \n");
 
-    size_t i = 0;
-    for (; i < created; ++i) 
+    size_t i;
+    for (i = 0; i < created; ++i) 
     {
         printf("%s\n", files[i].d_name);
     }
@@ -157,11 +157,11 @@ int main (int argc, char **argv)
     printf("Do you want to proceed? Y/N ");
 
     // ask for delete or not
-    char delete_conf[1];
-    fgets(delete_conf, 1, stdin);
+    char delete_conf[2];
+    fgets(delete_conf, sizeof(delete_conf), stdin);
     if (toupper(delete_conf[0]) == 'Y')
     {
-        for (; i < to_delete; ++i)
+        for (i = 0; i < to_delete; ++i)
         {
             // based on dirent
             char *current_filename = files[i].d_name;
