@@ -1,3 +1,4 @@
+// p13 1.0
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,7 +52,7 @@ struct dirent *search_directory(DIR *src_dir, char *filter,
             // ask for delete or not
             printf("Delete %s (y/n)", current_filename);
             char delete_conf[1];
-            gets(delete_conf);
+            fgets(delete_conf, 1, stdin);
 
             if (toupper(delete_conf[0]) == 'Y')
             {
@@ -126,7 +127,7 @@ int main (int argc, char **argv)
 
     printf("Enter filter: ");
     char filter[32];
-    gets(filter);
+    fgets(filter, 32, stdin);
 
     // Ensure we can open directory
     src_dir = opendir (argv[1]);
@@ -157,7 +158,7 @@ int main (int argc, char **argv)
 
     // ask for delete or not
     char delete_conf[1];
-    gets(delete_conf);
+    fgets(delete_conf, 1, stdin);
     if (toupper(delete_conf[0]) == 'Y')
     {
         for (; i < to_delete; ++i)
